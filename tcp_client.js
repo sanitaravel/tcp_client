@@ -1,34 +1,48 @@
-// File: tcp_client.mjs
-
 import net from 'net';
+import { promptUserInput } from './user_input_handler.js'; // Import the input handler module
 
-/**
- * Create and connect a TCP client to the specified host and port.
- * @param {string} host - The server hostname or IP address.
- * @param {number} port - The server port number.
- */
-export function createTcpClient(host, port) {
+// Function to start the TCP client
+export function startClient(host, port) {
     const client = new net.Socket();
 
     // Connect to the server
     client.connect(port, host, () => {
-        console.log('Connected');
+        console.log(`Connected to server: ${host}:${port}`);
+        promptUserInput(client); // Pass the client object to inputHandler
     });
 
-    // Handle data received from the server
+    // Handle data from the server
     client.on('data', (data) => {
-        console.log(`Server says: ${data}`);
+        console.log(`Server: ${data.toString()}`);
+        promptUserInput(client); // Prompt user for next input after receiving server response
     });
 
-    // Handle connection close
+    // Handle connection errors
+    client.on('error', (err) => {
+        console.error(`Connection error: ${err.message}`);
+        process.exit(1); // Exit on connection error
+    });
+
+    // Handle the closing of the connection
     client.on('close', () => {
         console.log('Connection closed');
+        process.exit(0); // Exit when the connection is closed
     });
 
-    // Handle errors
-    client.on('error', (err) => {
-        console.error(`Error: ${err.message}`);
-    });
+    // Function to send data to the server
+    client.sendData = function(message) {
+        client.write(message, (err) => {
+            if (err) {
+                console.error(`Failed to send message: ${err.message}`);
+            } else {
+                console.log(`Message sent successfully: ${message}`);
+            }
+        });
+    };
 
-    return client; // Return the client instance for further use if needed
+    // Function to close the connection
+    client.closeConnection = function() {
+        console.log('Closing connection...');
+        client.end(); // Gracefully close the connection
+    };
 }

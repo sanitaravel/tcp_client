@@ -63,6 +63,17 @@ Ensure that `"type": "module"` is set in your `package.json` to enable ES module
 }
 ```
 
+### Update `main.js`
+
+Ensure that `"host"` and `"port"` is set in your `main.js` to enable client side operations:
+
+```js
+{
+   const host = '192.168.178.20'; // Replace with the target server's host
+   const port = 3000;             // Replace with the target server's port
+}
+```
+
 ## How to Run
 
 1. Ensure you have the server running and know the host and port it is listening on.

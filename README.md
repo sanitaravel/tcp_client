@@ -24,7 +24,7 @@ To get started with this project, follow the steps below.
 First, clone the repository to your local machine:
 
 ```bash
-git clone https://github.com/your-username/tcp-client.git
+git clone https://github.com/sanitaravel/tcp_client
 cd tcp-client
 ```
 
